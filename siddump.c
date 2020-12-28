@@ -302,6 +302,7 @@ int main(int argc, char **argv)
   // Data collection & display loop
   while (frames < firstframe + seconds*50)
   {
+    char prevmem[25];
     int c;
 
     // Run the playroutine
@@ -332,12 +333,23 @@ int main(int argc, char **argv)
     filt.ctrl = mem[0xd417];
     filt.type = mem[0xd418];
 
+    for (int i = 0; i < 25; i++)
+    {
+        char d = mem[0xd400+i];
+        if (prevmem[i] != d)
+        {
+            printf("%02X %02X\n", i, d);
+            prevmem[i] = d;
+        }
+    }
+
+
     // Frame display
     if (frames >= firstframe)
     {
       char output[512];
       int time = frames - firstframe;
-      output[0] = 0;      
+      output[0] = 0;
 
       if (!timeseconds)
         sprintf(&output[strlen(output)], "| %5d | ", time);
